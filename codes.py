@@ -43,7 +43,7 @@ def apply_lpf(event):
     if kernel_size % 2 == 0:
         kernel_size += 1
     image = cv2.imread(file_path)
-    lpf_image = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+    lpf_image = cv2.GaussianBlur(image, (kernel_size, kernel_size))
     display_image('LPF Result', lpf_image)
 
 def update_hpf():
@@ -54,7 +54,10 @@ def apply_hpf(event):
     if kernel_size % 2 == 0:
         kernel_size += 1
     image = cv2.imread(file_path)
-    hpf_image = cv2.Laplacian(image, cv2.CV_64F, ksize=kernel_size)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred_image = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+    hpf_image = cv2.subtract(image, blurred_image)
+    hpf_image = cv2.cvtColor(hpf_image, cv2.COLOR_GRAY2BGR)
     display_image('HPF Result', hpf_image)
 
 def update_mean():
